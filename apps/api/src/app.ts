@@ -1,5 +1,10 @@
 import Fastify from "fastify";
-import { getStatus, testDatabase } from "./handlers";
+import {
+  getProductById,
+  getProducts,
+  getStatus,
+  testDatabase,
+} from "./handlers";
 
 // =============================================================================
 // Main Application
@@ -29,11 +34,29 @@ async function main() {
   // Test routes
   // ---------------------------------------------------------------------------
 
-  // Verify server is running
-  fastify.get("/status", getStatus);
+  fastify.get("/status", getStatus); // Verify server is running
+  fastify.get("/test", testDatabase); // Verify DB connection
 
-  // Verify DB connection
-  fastify.get("/test", testDatabase);
+  // ---------------------------------------------------------------------------
+  // Product routes
+  // ---------------------------------------------------------------------------
+
+  fastify.get("/products", getProducts);
+  fastify.get(
+    "/products/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          required: ["id"],
+          properties: {
+            id: { type: "string" },
+          },
+        },
+      },
+    },
+    getProductById
+  );
 
   // ---------------------------------------------------------------------------
   // Start the server
