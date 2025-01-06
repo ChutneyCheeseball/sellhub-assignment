@@ -37,11 +37,12 @@ export const orderProduct = async (
       return;
     }
     // Update product inventory_count
+    const remaining = inventory_count - count;
     await database
       .update(products)
-      .set({ inventory_count: inventory_count - count })
+      .set({ inventory_count: remaining })
       .where(eq(products.id, id));
-    reply.send({ ok: true, message: `Ordered ${count} product(s)` });
+    reply.send({ ok: true, message: `Ordered ${count} product(s)`, remaining });
   } catch (e) {
     reply.code(500).send(databaseError);
   }
