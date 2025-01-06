@@ -1,4 +1,6 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
+
 import {
   getProduct,
   getProducts,
@@ -19,6 +21,12 @@ import {
 
 async function main() {
   const fastify = Fastify({ ignoreTrailingSlash: true });
+  // Automatically handle CORS headers
+  fastify.register(cors, {
+    origin: "*",
+    methods: ["GET", "POST", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+  });
 
   // ---------------------------------------------------------------------------
   // Shutdown handlers and hooks
