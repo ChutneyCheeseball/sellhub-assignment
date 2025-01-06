@@ -1,6 +1,10 @@
 import { sql } from "drizzle-orm";
 import { pgTable, uuid, varchar, integer, check } from "drizzle-orm/pg-core";
 
+// =============================================================================
+// Schema for table "products"
+// =============================================================================
+
 export const products = pgTable(
   "products",
   {

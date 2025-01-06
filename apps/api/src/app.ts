@@ -1,8 +1,17 @@
 import Fastify from "fastify";
-import { getProduct, getProducts, getStatus, testDatabase } from "./handlers";
-import { updateProductInventory } from "./handlers/updateProductInventory";
-import { routeHasIdSchema } from "./schema/routeHasIdSchema";
-import { updateInventorySchema } from "./schema/updateInventorySchema";
+import {
+  getProduct,
+  getProducts,
+  getStatus,
+  updateProductInventory,
+  orderProduct,
+  testDatabase,
+} from "./handlers";
+import {
+  routeHasIdSchema,
+  updateInventorySchema,
+  orderProductSchema,
+} from "./schema";
 
 // =============================================================================
 // Main Application
@@ -39,13 +48,19 @@ async function main() {
   // Product routes
   // ---------------------------------------------------------------------------
 
+  // Get product(s)
   fastify.get("/products/:id", { schema: routeHasIdSchema }, getProduct);
   fastify.get("/products", getProducts);
+
+  // Update product inventory (dashboard)
   fastify.post(
     "/products/:id",
     { schema: updateInventorySchema },
     updateProductInventory
   );
+
+  // Order a product (store)
+  fastify.post("/orders", { schema: orderProductSchema }, orderProduct);
 
   // ---------------------------------------------------------------------------
   // Start the server

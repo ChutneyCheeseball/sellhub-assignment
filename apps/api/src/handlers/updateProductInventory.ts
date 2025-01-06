@@ -3,6 +3,7 @@ import { databaseError, notFoundError } from "../responses";
 import { database } from "../db";
 import { eq, count } from "drizzle-orm";
 import { products } from "../db/schema";
+import { productExists } from "../db/productExists";
 
 // =============================================================================
 // Handler to update the inventory of a single product by ID
@@ -17,17 +18,12 @@ export const updateProductInventory = async (
 ) => {
   try {
     const { id } = request.params;
-    // Check if this product exists in the database
-    const result = await database
-      .select({ count: count() })
-      .from(products)
-      .where(eq(products.id, id));
-    // Abort if it doesn't
-    if (result[0].count === 0) {
+    if (!(await productExists(id))) {
+      // Abort if product doesn't exist
       reply.code(404).send(notFoundError);
       return;
     }
-    // Update if it does
+    // Update it if it does exist
     const { inventory_count } = request.body;
     await database
       .update(products)
