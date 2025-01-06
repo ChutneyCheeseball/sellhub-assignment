@@ -1,17 +1,15 @@
 import Fastify from "fastify";
-import {
-  getProductById,
-  getProducts,
-  getStatus,
-  testDatabase,
-} from "./handlers";
+import { getProduct, getProducts, getStatus, testDatabase } from "./handlers";
+import { updateProductInventory } from "./handlers/updateProductInventory";
+import { routeHasIdSchema } from "./schema/routeHasIdSchema";
+import { updateInventorySchema } from "./schema/updateInventorySchema";
 
 // =============================================================================
 // Main Application
 // =============================================================================
 
 async function main() {
-  const fastify = Fastify();
+  const fastify = Fastify({ ignoreTrailingSlash: true });
 
   // ---------------------------------------------------------------------------
   // Shutdown handlers and hooks
@@ -41,21 +39,12 @@ async function main() {
   // Product routes
   // ---------------------------------------------------------------------------
 
+  fastify.get("/products/:id", { schema: routeHasIdSchema }, getProduct);
   fastify.get("/products", getProducts);
-  fastify.get(
+  fastify.post(
     "/products/:id",
-    {
-      schema: {
-        params: {
-          type: "object",
-          required: ["id"],
-          properties: {
-            id: { type: "string" },
-          },
-        },
-      },
-    },
-    getProductById
+    { schema: updateInventorySchema },
+    updateProductInventory
   );
 
   // ---------------------------------------------------------------------------

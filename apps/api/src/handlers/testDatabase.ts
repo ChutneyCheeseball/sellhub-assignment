@@ -1,9 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { database } from "../db";
 
+// =============================================================================
 // A simple handler for testing the database connection
 // Returns { ok: true, timestamp: <timestamp> } on success
 // Returns { ok: false } on database failure
+// =============================================================================
 
 export const testDatabase = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
