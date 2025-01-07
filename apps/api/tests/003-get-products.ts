@@ -21,6 +21,17 @@ describe(`GET /${endpoint}/<malformed_uuid>`, () => {
   });
 });
 
+describe(`GET /${endpoint}/<invalid_uuid>`, () => {
+  it(`GET /${endpoint}/<invalid_uuid> returns status 404 and error message`, async () => {
+    const response = await fetch(
+      `http://localhost:3002/${endpoint}/00000000-0000-0000-0000-000000000000`
+    );
+    assert.deepStrictEqual(response.status, 404);
+    const j = await response.json();
+    assert.deepStrictEqual(j.message, "Product not found");
+  });
+});
+
 const uuid = "115322f6-c8bc-4136-9465-b19e3bb1594e";
 describe(`GET /${endpoint}/${uuid}`, () => {
   it(`GET /${endpoint}/${uuid} returns status 200 and valid product`, async () => {

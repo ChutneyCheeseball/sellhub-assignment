@@ -26,6 +26,7 @@ The service runs on port 3002.
 - `npm run build` - build the microservice (output folder is `build`)
 - `npm start` - run the built microservice
 - `npm run dev` - start the microservice in development mode
+- `npm test` - run comprehensive tests against endpoints (requires server to be running)
 - `npm run db:generate` - generate SQL files with Drizzle
 - `npm run db:migrate` - migrate SQL files to database
 
@@ -165,6 +166,12 @@ $ `curl -X POST http://localhost:3002/orders -d '{ "id": "115322f6-c8bc-4136-946
     "remaining": 19
 }
 ```
+
+## Testing
+
+As most of the work resides in HTTP handlers, testing is done by performing GET and POST requests against the endpoints. The microservice needs to be running for the tests to work.
+
+Note that as part of the tests, product data in the database is changed. In a real-world scenario this would require a specific product to be flagged as a test product, but for the purposes of this assignment changing a "regular" product should be fine.
 
 ## Concerning Fastify
 
